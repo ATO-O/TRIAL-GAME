@@ -18,8 +18,16 @@ playerX = 450
 playerY = 480
 playerX_change = 0
 
+#coin icon
+coinImg = pygame.image.load("silver-badge.png")
+coinX = 450
+coinY = 50
+
 def player(x, y):
     screen.blit(playerImg, (x, y))
+
+def coin(x, y):
+    screen.blit(coinImg, (x, y))
 
 # background icon
 # background = pygame.image.load("background.png")
@@ -49,4 +57,5 @@ while running:
     elif playerX >= 870:
         playerX = 870
     player(playerX, playerY)
+    coin(coinX, coinY)
     pygame.display.update()
