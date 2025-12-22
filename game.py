@@ -21,37 +21,43 @@ playerX_change = 0
 
 # coin icon
 coinImg = pygame.image.load("silver-badge.png")
-coinX = random.randint(0,1000)
+coinX = 0
 coinY = 50
-coinX_change = 0
 coinY_change = 2
 
 # paperclip icons
 paperclipImg = pygame.image.load("paperclip.png")
-paperclipX = random.randint(0,1000)
+paperclipX = 0
 paperclipY = 50
-paperclipX_change = 0
 paperclipY_change = 2
 
 # nut-bolt icons
 nutImg = pygame.image.load("nut.png")
-nutX = random.randint(0,1000)
+nutX = 0
 nutY = 50
-nutX_change = 0
 nutY_change = 2
 
 # bomb icons
 bombImg = pygame.image.load("bomb.png")
-bombX = random.randint(0,1000)
+bombX = 0
 bombY = 50
-bombX_change = 0
 bombY_change = 2
 
+#magnet force
+lightImg = pygame.image.load("lightning.png")
+lightX = 0
+lightY = 50
+light_state = "OFF"
 
 def player(x, y):
     screen.blit(playerImg, (x, y))
 
-#obstacles and collectible functions
+def light(x, y):
+    global light_state
+    light_state = "ON"
+    screen.blit(lightImg, (x+43, y))
+
+# obstacles and collectible functions
 
 def coin(x, y):
     screen.blit(coinImg, (x, y))
@@ -76,7 +82,7 @@ background = pygame.image.load("background.png")
 while running:
     # rgb - theme of screen
     screen.fill((0, 0, 255))
-    #background image
+    # background image
     screen.blit(background, (0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -88,46 +94,53 @@ while running:
                 playerX_change = -5
             if event.key == pygame.K_RIGHT:
                 playerX_change = 5
+            if event.key == pygame.K_SPACE:
+                light(playerX, playerY)
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
 
+
+
     playerX += playerX_change
-#player movement boundries
+    # player movement boundries
     if playerX <= 0:
         playerX = 0
     elif playerX >= 870:
         playerX = 870
 
     coinY += coinY_change
-#coin movement boundries
+
+    # coin movement boundries
     if coinY <= 0:
         coinY = 0
     elif coinY >= 450:
-        coinY = 450
+        coinY = 0
+        coinX = random.randint(0, 870)
 
     nutY += nutY_change
-# nut movement boundries
+    # nut movement boundries
     if nutY <= 0:
         nutY = 0
     elif nutY >= 450:
-        nutY = 450
+        nutY = 0
+        nutX = random.randint(0, 870)
 
     paperclipY += paperclipY_change
-# paperclip movement boundries
+    # paperclip movement boundries
     if paperclipY <= 0:
         paperclipY = 0
     elif paperclipY >= 450:
-        paperclipY = 450
+        paperclipY = 0
+        paperclipX = random.randint(0, 870)
 
     bombY += bombY_change
-# coin movement boundries
+    # bomb movement boundries
     if bombY <= 0:
         bombY = 0
     elif bombY >= 450:
-        bombY = 450
-
-
+        bombY = 0
+        bombX = random.randint(0, 870)
 
     player(playerX, playerY)
     coin(coinX, coinY)
