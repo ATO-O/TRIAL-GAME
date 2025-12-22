@@ -24,28 +24,28 @@ coinImg = pygame.image.load("silver-badge.png")
 coinX = 450
 coinY = 50
 coinX_change = 0
-coinY_change = 0.3
+coinY_change = 2
 
 # paperclip icons
 paperclipImg = pygame.image.load("paperclip.png")
 paperclipX = 350
 paperclipY = 50
 paperclipX_change = 0
-paperclipY_change = 0.3
+paperclipY_change = 2
 
 # nut-bolt icons
 nutImg = pygame.image.load("nut.png")
 nutX = 400
 nutY = 50
 nutX_change = 0
-nutY_change = 0.3
+nutY_change = 2
 
 # bomb icons
 bombImg = pygame.image.load("bomb.png")
 bombX = 550
 bombY = 50
 bombX_change = 0
-bombY_change = 0.3
+bombY_change = 2
 
 
 def player(x, y):
@@ -70,12 +70,14 @@ def bomb(x, y):
 
 
 # background icon
-# background = pygame.image.load("background.png")
+background = pygame.image.load("background.png")
 
 # game loop
 while running:
     # rgb - theme of screen
     screen.fill((0, 0, 255))
+    #background image
+    screen.blit(background, (0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -83,9 +85,9 @@ while running:
         # keystroke movevent for the player.
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerX_change = -1
+                playerX_change = -5
             if event.key == pygame.K_RIGHT:
-                playerX_change = 1
+                playerX_change = 5
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
