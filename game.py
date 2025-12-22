@@ -1,5 +1,5 @@
 import pygame
-import random as r
+import random
 
 # initializing pygame
 pygame.init()
@@ -21,28 +21,28 @@ playerX_change = 0
 
 # coin icon
 coinImg = pygame.image.load("silver-badge.png")
-coinX = 450
+coinX = random.randint(0,1000)
 coinY = 50
 coinX_change = 0
 coinY_change = 2
 
 # paperclip icons
 paperclipImg = pygame.image.load("paperclip.png")
-paperclipX = 350
+paperclipX = random.randint(0,1000)
 paperclipY = 50
 paperclipX_change = 0
 paperclipY_change = 2
 
 # nut-bolt icons
 nutImg = pygame.image.load("nut.png")
-nutX = 400
+nutX = random.randint(0,1000)
 nutY = 50
 nutX_change = 0
 nutY_change = 2
 
 # bomb icons
 bombImg = pygame.image.load("bomb.png")
-bombX = 550
+bombX = random.randint(0,1000)
 bombY = 50
 bombX_change = 0
 bombY_change = 2
