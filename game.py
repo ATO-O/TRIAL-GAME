@@ -1,4 +1,5 @@
 import pygame
+import random as r
 
 # initializing pygame
 pygame.init()
@@ -23,24 +24,28 @@ coinImg = pygame.image.load("silver-badge.png")
 coinX = 450
 coinY = 50
 coinX_change = 0
+coinY_change = 0.3
 
 # paperclip icons
 paperclipImg = pygame.image.load("paperclip.png")
-paperclipX = 450
-paperclipY = 60
+paperclipX = 350
+paperclipY = 50
 paperclipX_change = 0
+paperclipY_change = 0.3
 
 # nut-bolt icons
 nutImg = pygame.image.load("nut.png")
-nutX = 450
+nutX = 400
 nutY = 50
 nutX_change = 0
+nutY_change = 0.3
 
 # bomb icons
 bombImg = pygame.image.load("bomb.png")
-bombX = 450
-bombY = 60
+bombX = 550
+bombY = 50
 bombX_change = 0
+bombY_change = 0.3
 
 
 def player(x, y):
@@ -86,10 +91,42 @@ while running:
                 playerX_change = 0
 
     playerX += playerX_change
+#player movement boundries
     if playerX <= 0:
         playerX = 0
     elif playerX >= 870:
         playerX = 870
+
+    coinY += coinY_change
+#coin movement boundries
+    if coinY <= 0:
+        coinY = 0
+    elif coinY >= 450:
+        coinY = 450
+
+    nutY += nutY_change
+# nut movement boundries
+    if nutY <= 0:
+        nutY = 0
+    elif nutY >= 450:
+        nutY = 450
+
+    paperclipY += paperclipY_change
+# paperclip movement boundries
+    if paperclipY <= 0:
+        paperclipY = 0
+    elif paperclipY >= 450:
+        paperclipY = 450
+
+    bombY += bombY_change
+# coin movement boundries
+    if bombY <= 0:
+        bombY = 0
+    elif bombY >= 450:
+        bombY = 450
+
+
+
     player(playerX, playerY)
     coin(coinX, coinY)
     paperclip(paperclipX, paperclipY)
