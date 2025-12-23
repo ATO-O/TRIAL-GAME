@@ -7,6 +7,9 @@ pygame.init()
 # setting screen
 screen = pygame.display.set_mode((1000, 600))
 running = True
+spawn_timer = 0
+spawn_rate = 60
+game_time = 0
 
 # display text & icons
 pygame.display.set_caption("Magnatiz")
@@ -33,7 +36,7 @@ def player(x, y):
 def light(x, y):
     global light_state
     light_state = "ON"
-    screen.blit(lightImg, (x + 4, y))
+    screen.blit(lightImg, (x + 45, y+10))
 
 
 # obstacles and collectible functions
@@ -112,10 +115,10 @@ while running:
     # background image
     screen.blit(background, (0, 0))
 
+#loop for checking clicking or keystrokes
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
         # keystroke movevent for the player.
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
@@ -129,6 +132,36 @@ while running:
                 playerX_change = 0
             if event.key == pygame.K_SPACE:
                 light_state = "OFF"  # Turn off when released
+    #spawning multiple collectibles
+    spawn_timer += 1 #increase timer every frame
+    if spawn_timer >= spawn_rate:
+        #time to spawn pick random position
+        random_x = random.randint(50, 900)
+
+        #pick random object type
+        choice = random.randint(1, 4)
+        if choice == 1:
+            objects.append(Coin(random_x, 0))
+        elif choice == 2:
+            objects.append(Screw(random_x, 0))
+        elif choice == 3:
+            objects.append(paperclip(random_x, 0))
+        elif choice == 4:
+            objects.append(Bomb(random_x, 0))
+
+        spawn_timer = 0  #reset the timer
+
+    #difficulty loop
+    game_time += 1
+
+    #adjusting diffuculty
+    if game_time < 1800:
+        spawn_rate = 60
+    elif game_time >= 3600:
+        spawn_rate = 45
+    else:
+        spawn_rate = 30
+
 
     playerX += playerX_change
     # player movement boundries
@@ -142,6 +175,10 @@ while running:
         obj.update()
         obj.boundries()
         obj.draw(screen)
+
+        #remove if off screen
+        if obj.y >= 650:
+            objects.remove(obj)
 
     # Draw lightning effect if active
     if light_state == "ON":
