@@ -19,61 +19,88 @@ playerX = 450
 playerY = 480
 playerX_change = 0
 
-# coin icon
-coinImg = pygame.image.load("silver-badge.png")
-coinX = 0
-coinY = 50
-coinY_change = 2
-
-# paperclip icons
-paperclipImg = pygame.image.load("paperclip.png")
-paperclipX = 0
-paperclipY = 50
-paperclipY_change = 2
-
-# nut-bolt icons
-nutImg = pygame.image.load("nut.png")
-nutX = 0
-nutY = 50
-nutY_change = 2
-
-# bomb icons
-bombImg = pygame.image.load("bomb.png")
-bombX = 0
-bombY = 50
-bombY_change = 2
-
-#magnet force
+# magnet force
 lightImg = pygame.image.load("lightning.png")
 lightX = 0
 lightY = 50
 light_state = "OFF"
 
+
 def player(x, y):
     screen.blit(playerImg, (x, y))
+
 
 def light(x, y):
     global light_state
     light_state = "ON"
-    screen.blit(lightImg, (x+43, y))
+    screen.blit(lightImg, (x + 4, y))
+
 
 # obstacles and collectible functions
+class GameObject:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.velocity_y = 2
 
-def coin(x, y):
-    screen.blit(coinImg, (x, y))
+    def update(self):
+        self.y += self.velocity_y
+
+    def draw(self, screen):
+        pass  # Override in child classes
+
+    def boundries(self):
+        if self.y >= 600:  # Changed from 450 to 600 (screen height)
+            self.y = 0
+            self.x = random.randint(0, 870)  # Fixed typo: randit -> randint
 
 
-def paperclip(x, y):
-    screen.blit(paperclipImg, (x, y))
+class Coin(GameObject):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.points = 10
+        self.image = pygame.image.load("silver-badge.png")
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
 
-def nut(x, y):
-    screen.blit(nutImg, (x, y))
+class paperclip(GameObject):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.points = 5
+        self.image = pygame.image.load("paperclip.png")
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
 
-def bomb(x, y):
-    screen.blit(bombImg, (x, y))
+class Bomb(GameObject):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.deadly = True
+        self.image = pygame.image.load("bomb.png")
 
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+
+
+class Screw(GameObject):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.points = 5
+        self.image = pygame.image.load("nut.png")
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+
+
+# Now add them all to ONE list
+objects = []
+objects.append(Coin(0, 50))
+objects.append(paperclip(200, 50))
+objects.append(Bomb(400, 50))
+objects.append(Screw(600, 50))
 
 # background icon
 background = pygame.image.load("background.png")
@@ -84,6 +111,7 @@ while running:
     screen.fill((0, 0, 255))
     # background image
     screen.blit(background, (0, 0))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -95,12 +123,12 @@ while running:
             if event.key == pygame.K_RIGHT:
                 playerX_change = 5
             if event.key == pygame.K_SPACE:
-                light(playerX, playerY)
+                light_state = "ON"  # Just set state
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
-
-
+            if event.key == pygame.K_SPACE:
+                light_state = "OFF"  # Turn off when released
 
     playerX += playerX_change
     # player movement boundries
@@ -109,42 +137,15 @@ while running:
     elif playerX >= 870:
         playerX = 870
 
-    coinY += coinY_change
+    # Update and draw all objects (MOVED INSIDE LOOP!)
+    for obj in objects:
+        obj.update()
+        obj.boundries()
+        obj.draw(screen)
 
-    # coin movement boundries
-    if coinY <= 0:
-        coinY = 0
-    elif coinY >= 450:
-        coinY = 0
-        coinX = random.randint(0, 870)
-
-    nutY += nutY_change
-    # nut movement boundries
-    if nutY <= 0:
-        nutY = 0
-    elif nutY >= 450:
-        nutY = 0
-        nutX = random.randint(0, 870)
-
-    paperclipY += paperclipY_change
-    # paperclip movement boundries
-    if paperclipY <= 0:
-        paperclipY = 0
-    elif paperclipY >= 450:
-        paperclipY = 0
-        paperclipX = random.randint(0, 870)
-
-    bombY += bombY_change
-    # bomb movement boundries
-    if bombY <= 0:
-        bombY = 0
-    elif bombY >= 450:
-        bombY = 0
-        bombX = random.randint(0, 870)
+    # Draw lightning effect if active
+    if light_state == "ON":
+        light(playerX, playerY)
 
     player(playerX, playerY)
-    coin(coinX, coinY)
-    paperclip(paperclipX, paperclipY)
-    nut(nutX, nutY)
-    bomb(bombX, bombY)
     pygame.display.update()
